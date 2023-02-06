@@ -143,6 +143,9 @@
 
     private async void OnChange(UploadChangeEventArgs args)
     {
+        //creates instance of supabaseobject to add to docxDocuments list
+        Supabase.Storage.FileObject uploadedDocSupabaseObject = new Supabase.Storage.FileObject();
+
         //Save upload document to path
         foreach (var file in args.Files)
         {
@@ -152,18 +155,15 @@
             file.Stream.Close();
         }
 
-        Supabase.Storage.FileObject upd = new Supabase.Storage.FileObject()
-        {
-
-        };
-        _docxDocuments.Add(upd);
-        StateHasChanged();
-
         //if first document, upload and return; no changelog is required
         if (_docVersion == 0 && _firstDoc == true)
         {
             await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
             File.Delete("UploadDoc.docx");
+
+            uploadedDocSupabaseObject.Name = $"contract1/licence_v{_docVersion}.docx";
+            _docxDocuments.Add(uploadedDocSupabaseObject);
+
             _firstDoc = false;
             StateHasChanged();
             return;
@@ -204,13 +204,17 @@
 
         //upload "upload" and changelog
         await SupabaseClient.Storage.From("demo").Upload("Changelog.html", $"contract1/changelog_v{_docVersion}.html", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
+
         await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
+        uploadedDocSupabaseObject.Name = $"contract1/licence_v{_docVersion}.docx";
+        _docxDocuments.Add(uploadedDocSupabaseObject);
 
         File.Delete("UploadDoc.docx");
         File.Delete("UploadHtml.html");
         File.Delete("FormerDoc.docx");
         File.Delete("FormerHtml.html");
         File.Delete("Changelog.html");
+
         StateHasChanged();
     }
 

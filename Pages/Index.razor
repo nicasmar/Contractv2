@@ -161,7 +161,7 @@
             await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
             File.Delete("UploadDoc.docx");
 
-            uploadedDocSupabaseObject.Name = $"contract1/licence_v{_docVersion}.docx";
+            uploadedDocSupabaseObject.Name = $"licence_v{_docVersion}.docx";
             _docxDocuments.Add(uploadedDocSupabaseObject);
 
             _firstDoc = false;
@@ -206,7 +206,7 @@
         await SupabaseClient.Storage.From("demo").Upload("Changelog.html", $"contract1/changelog_v{_docVersion}.html", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
 
         await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
-        uploadedDocSupabaseObject.Name = $"contract1/licence_v{_docVersion}.docx";
+        uploadedDocSupabaseObject.Name = $"licence_v{_docVersion}.docx";
         _docxDocuments.Add(uploadedDocSupabaseObject);
 
         File.Delete("UploadDoc.docx");

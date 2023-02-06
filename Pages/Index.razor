@@ -161,6 +161,13 @@
             file.Stream.Close();
         }
 
+        Supabase.Storage.FileObject upd = new Supabase.Storage.FileObject()
+        {
+
+        };
+        _docxDocuments.Add(upd);
+        StateHasChanged();
+
         //if first document, upload and return; no changelog is required
         if (_docVersion == 0 && _firstDoc == true)
         {

@@ -148,6 +148,7 @@
     private List<Supabase.Storage.FileObject> _documents = new List<Supabase.Storage.FileObject>();
     private List<Supabase.Storage.FileObject> _docxDocuments = new List<Supabase.Storage.FileObject>();
     private int _docVersion = 0;
+    private bool _firstDoc = false;
 
     private async void OnChange(UploadChangeEventArgs args)
     {
@@ -161,11 +162,11 @@
         }
 
         //if first document, upload and return; no changelog is required
-        if (_docVersion == 0)
+        if (_docVersion == 0 && _firstDoc == true)
         {
             await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
             File.Delete("UploadDoc.docx");
-            _docVersion++;
+            _firstDoc = false;
             return;
         }
 
@@ -226,6 +227,7 @@
                 if (document.Name!.Contains(".emptyFolderPlaceholder"))
                 {
                     _docVersion = 0;
+                    _firstDoc = true;
                     _isLoading = false;
                     return;
                 }

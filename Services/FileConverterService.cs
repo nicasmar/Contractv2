@@ -6,9 +6,9 @@ using System.IO;
 
 namespace Contractv2.Services
 {
-    public class WordService
+    public class FileConverterService
     {
-        public MemoryStream ConvertWordToHtml(string path)
+        public void ConvertWordToHtml(string path, ref MemoryStream ms)
         {
             using (FileStream inputStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -16,12 +16,8 @@ namespace Contractv2.Services
                 using (WordDocument document = new WordDocument(inputStream, FormatType.Automatic))
                 {
                     //Save as a Markdown file into the MemoryStream.
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        document.Save(stream, FormatType.Html);
-                        stream.Position = 0;
-                        return stream;
-                    }
+                    document.Save(ms, FormatType.Html);
+                    ms.Position = 0;
                 }
             }
         }

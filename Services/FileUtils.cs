@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace Contractsv2
+namespace Contractv2.Services
 {
     public static class FileUtils
     {

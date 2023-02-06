@@ -1,64 +1,71 @@
 ﻿@page "/"
-@using System.IO
-@using Contractsv2;
-@using Syncfusion.Blazor.Inputs
-@inject Contractv2.Services.WordService service
+
+@using Contractv2.Services;
+@using Syncfusion.Blazor.Inputs;
+@using System.IO;
+@using Syncfusion.Blazor.Inputs;
+@using System.Text;
+
+@inject Contractv2.Services.FileConverterService FileConverterService
 @inject Microsoft.JSInterop.IJSRuntime JS
+@inject Supabase.Client SupabaseClient
+@inject ChangelogService ChangelogService
 
-@if (modal) {
-<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <!--
-      Background backdrop, show/hide based on modal state.
+@if (_modal)
+{
+    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!--
+          Background backdrop, show/hide based on modal state.
 
-      Entering: "ease-out duration-300"
-        From: "opacity-0"
-        To: "opacity-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+          Entering: "ease-out duration-300"
+            From: "opacity-0"
+            To: "opacity-100"
+          Leaving: "ease-in duration-200"
+            From: "opacity-100"
+            To: "opacity-0"
+        -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <!--
-              Modal panel, show/hide based on modal state.
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <!--
+                  Modal panel, show/hide based on modal state.
 
-              Entering: "ease-out duration-300"
-                From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                To: "opacity-100 translate-y-0 sm:scale-100"
-              Leaving: "ease-in duration-200"
-                From: "opacity-100 translate-y-0 sm:scale-100"
-                To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            -->
-            <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                <div>
-                    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                        <!-- Heroicon name: outline/check -->
-                        <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                    </div>
-                    <div class="mt-3 text-center sm:mt-5">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Payment successful</h3>
-                        <div class="mt-2">
-                            <SfUploader AutoUpload="false">
-                                <UploaderEvents ValueChange="OnChange"></UploaderEvents>
-                            </SfUploader>
+                  Entering: "ease-out duration-300"
+                    From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    To: "opacity-100 translate-y-0 sm:scale-100"
+                  Leaving: "ease-in duration-200"
+                    From: "opacity-100 translate-y-0 sm:scale-100"
+                    To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                -->
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                    <div>
+                        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                            <!-- Heroicon name: outline/check -->
+                            <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-5">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Payment successful</h3>
+                            <div class="mt-2">
+                                <SfUploader AutoUpload="false">
+                                    <UploaderEvents ValueChange="OnChange"></UploaderEvents>
+                                </SfUploader>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="mt-5 sm:mt-6">
-                    <button type="button" 
-                        @onclick="@CloseModal"
-                        class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">
-                        Go back to dashboard
-                    </button>
+                    <div class="mt-5 sm:mt-6">
+                        <button type="button"
+                            @onclick="@CloseModal"
+                            class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">
+                            Go back to dashboard
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 <div class="px-4 sm:px-6 lg:px-8">
     <div class="sm:flex sm:items-center">
@@ -67,9 +74,9 @@
             <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, title, email and role.</p>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <button type="button" 
-                @onclick="@OpenModal"
-                class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+            <button type="button"
+                    @onclick="@OpenModal"
+                    class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
                 Add user
             </button>
         </div>
@@ -133,49 +140,121 @@
         </div>
     </div>
 </div>
-<button class="btn btn-primary" @onclick="@ConvertWordToHtml">Convert Word to HTML</button>
-<button class="btn btn-primary" @onclick="@ConvertHtmltoWord">Convert HTML to Word</button>
-@*<button class="btn btn-primary" @onclick="@ConvertHtmlToPdf">Convert HTML to PDF</button>*@
-
-
 
 @code {
-    MemoryStream documentStream;
+    private bool _isLoading = true;
+    private bool _modal = false;
 
-    public string path;
-    public bool modal = false;
+    private List<Supabase.Storage.FileObject> _documents = new List<Supabase.Storage.FileObject>();
+    private List<Supabase.Storage.FileObject> _docxDocuments = new List<Supabase.Storage.FileObject>();
+    private int _docVersion = 0;
 
-    private void OnChange(UploadChangeEventArgs args)
+    private async void OnChange(UploadChangeEventArgs args)
     {
+        //Save upload document to path
         foreach (var file in args.Files)
         {
-            path = @"path" + file.FileInfo.Name;
-            FileStream filestream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            FileStream filestream = new FileStream("UploadDoc.docx", FileMode.Create, FileAccess.Write);
             file.Stream.WriteTo(filestream);
             filestream.Close();
             file.Stream.Close();
         }
+
+        //if first document, upload and return; no changelog is required
+        if (_docVersion == 0)
+        {
+            await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
+            File.Delete("UploadDoc.docx");
+            _docVersion++;
+            return;
+        }
+
+        _docVersion++;
+
+        //convert uploaded document to html and save
+        MemoryStream uploadHtmlStream = new MemoryStream();
+        FileConverterService.ConvertWordToHtml("UploadDoc.docx", ref uploadHtmlStream);
+        using (StreamWriter sw = new StreamWriter($"UploadHtml.html"))
+        {
+            using (StreamReader sr = new StreamReader(uploadHtmlStream, Encoding.UTF8))
+            {
+                sw.Write(sr.ReadToEnd());
+                await uploadHtmlStream.DisposeAsync();
+            }
+        }
+
+        //download and save former document
+        string supaFormerPath = $"contract1/licence_v{(_docVersion - 1)}.docx";
+        await SupabaseClient.Storage.From("demo").Download(supaFormerPath, "FormerDoc.docx");
+
+        //convert former document to html and save
+        MemoryStream formerHtmlStream = new MemoryStream();
+        FileConverterService.ConvertWordToHtml("FormerDoc.docx", ref formerHtmlStream);
+        using (StreamWriter sw = new StreamWriter("FormerHtml.html"))
+        {
+            using (StreamReader sr = new StreamReader(formerHtmlStream, Encoding.UTF8))
+            {
+                sw.Write(sr.ReadToEnd());
+                await formerHtmlStream.DisposeAsync();
+            }
+        }
+
+        //Get htmls' diff and save to path
+        ChangelogService.GetHtmlDifference("FormerHtml.html", "UploadHtml.html", "Changelog.html");
+
+        //upload "upload" and changelog
+        await SupabaseClient.Storage.From("demo").Upload("Changelog.html", $"contract1/changelog_v{_docVersion}.html", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
+        await SupabaseClient.Storage.From("demo").Upload("UploadDoc.docx", $"contract1/licence_v{_docVersion}.docx", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
+
+        File.Delete("UploadDoc.docx");
+        File.Delete("UploadHtml.html");
+        File.Delete("FormerDoc.docx");
+        File.Delete("FormerHtml.html");
+        File.Delete("Changelog.html");
     }
 
-    protected async void ConvertWordToHtml()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        documentStream = service.ConvertWordToHtml(path);
-        await JS.SaveAs("WordToHtml.html", documentStream.ToArray());
+        if (firstRender)
+        {
+            _isLoading = true;
+
+            _documents = await SupabaseClient.Storage.From("demo").List("contract1/", null);
+
+            foreach (Supabase.Storage.FileObject document in _documents)
+            {
+                if (document.Name!.Contains(".emptyFolderPlaceholder"))
+                {
+                    _docVersion = 0;
+                    _isLoading = false;
+                    return;
+                }
+                if (document.Name!.Contains(".docx"))
+                {
+                    _docVersion++;
+                    _docxDocuments.Add(document);
+                }
+            }
+            ///removing 1, as doc count starts on 0
+            _docVersion--;
+
+            _isLoading = false;
+        }
     }
 
-    protected async void ConvertHtmltoWord()
+    private async void ConvertHtmltoWord()
     {
-        documentStream = service.ConvertHTMLtoWord(path);
-        await JS.SaveAs("HTMLtoWord.docx", documentStream.ToArray());
+        //_documentStream = DocConverter.ConvertHTMLtoWord(_path);
+        //await JS.SaveAs("HTMLtoWord.docx", _documentStream.ToArray());
     }
 
-    protected void OpenModal()
+    private async void OpenModal()
     {
-        modal = true;
+        _modal = true;
     }
 
-    protected void CloseModal()
+    private void CloseModal()
     {
-        modal = false;
+        _modal = false;
     }
 }

@@ -30,3 +30,13 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.control-wrapper {
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 50px 0px 0px;
+}
+
+.e-upload .e-upload-files .e-upload-file-list {
+    text-align: left;
+}

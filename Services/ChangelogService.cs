@@ -58,16 +58,16 @@ namespace Contractv2.Services
                     // Check if the line contains the "<body>" sequence
                     if (line.Contains("<body>"))
                     {
-                        html1Sufix = line.Substring(line.IndexOf("<body>") + 6) + Environment.NewLine;
+                        html1Sufix = line.Substring(line.IndexOf("<body>") + 6);
                         while (!sr.EndOfStream)
                         {
-                            html1Sufix += sr.ReadLine() + Environment.NewLine;
+                            html1Sufix += sr.ReadLine();
                         }
                         break;
                     }
                     else
                     {
-                        html1Prefix += line + Environment.NewLine;
+                        html1Prefix += line;
                     }
                 }
             }
@@ -82,16 +82,16 @@ namespace Contractv2.Services
                     // Check if the line contains the "<body>" sequence
                     if (line.Contains("<body>"))
                     {
-                        html2Sufix = line.Substring(line.IndexOf("<body>") + 6) + Environment.NewLine;
+                        html2Sufix = line.Substring(line.IndexOf("<body>") + 6);
                         while (!sr.EndOfStream)
                         {
-                            html2Sufix += sr.ReadLine() + Environment.NewLine;
+                            html2Sufix += sr.ReadLine();
                         }
                         break;
                     }
                     else
                     {
-                        html2Prefix += line + Environment.NewLine;
+                        html2Prefix += line;
                     }
                 }
             }
